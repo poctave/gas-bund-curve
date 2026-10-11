@@ -1,0 +1,9 @@
+test,system,n_weeks,stat,p_value,rank_at_5pct,verdict
+Engle-Granger,bund_2y ~ ln_ttf,627,-1.1679486736891715,0.8660949330325953,0,no cointegration
+Engle-Granger,ils_eur_1y1y ~ ln_ttf,562,-2.404363581609445,0.32279107330145035,0,no cointegration
+Engle-Granger,ils_eur_1y1y ~ ln_brent,562,-3.3090603439552377,0.05350273958984937,0,no cointegration
+Engle-Granger,ois_estr_1y1y ~ ils_eur_1y1y,367,-1.3472284492198372,0.8150290431298224,0,no cointegration
+Engle-Granger,bund_2y ~ ois_estr_2y,368,-1.0972120201066784,0.8828052492387088,0,no cointegration
+Engle-Granger,bund_2y ~ ils_eur_1y1y,562,-1.9269605450722782,0.5662729074322046,0,no cointegration
+Johansen trace,"bund_2y , ils_eur_1y1y , ln_ttf , ln_brent",562,64.54913968236932,,3,rank 3 (trace r=0: 64.5 vs 5% cv 47.9)
+Johansen trace,"bund_2y , ois_estr_1y1y , ils_eur_1y1y , ln_ttf",367,56.57646244766375,,1,rank 1 (trace r=0: 56.6 vs 5% cv 47.9)

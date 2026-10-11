@@ -1,0 +1,97 @@
+event_date,event,variable,level_t-1,level_t,level_t+1
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),TTF (EUR/MWh),31.959,44.506,54.29
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),Brent (USD/bbl),72.48,77.74,81.4
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),ILS 1Y (%),1.817,1.977,2.219
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),ILS 1y1y (%),1.7424,1.8122,1.8844
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),OIS 1y1y (%),1.946205938938328,2.0102104248369335,2.088521199464699
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),OIS 2Y (%),1.9216,1.9776,2.042
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),Bund 2Y (%),2.03,2.03,2.19
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),Bund 5Y (%),2.28,2.27,2.43
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),Bund 10Y (%),2.69,2.66,2.8
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),Bund 30Y (%),3.36,3.33,3.42
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),2s10s (bp),66.00000000000001,63.000000000000036,60.999999999999986
+2026-03-02,War onset: Hormuz closure / Qatar LNG halt (first trading day),5Y swap spread (bp),7.045,,21.15
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",TTF (EUR/MWh),44.506,54.29,48.767
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",Brent (USD/bbl),77.74,81.4,81.4
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",ILS 1Y (%),1.977,2.219,2.159
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",ILS 1y1y (%),1.8122,1.8844,1.8232
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",OIS 1y1y (%),2.0102104248369335,2.088521199464699,2.0576136423717584
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",OIS 2Y (%),1.9776,2.042,2.0203
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",Bund 2Y (%),2.03,2.19,2.17
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",Bund 5Y (%),2.27,2.43,2.39
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",Bund 10Y (%),2.66,2.8,2.76
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",Bund 30Y (%),3.33,3.42,3.41
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",2s10s (bp),63.000000000000036,60.999999999999986,58.999999999999986
+2026-03-03,"Day 2: TTF +22%, Ras Laffan output halted",5Y swap spread (bp),,21.15,10.81
+2026-03-04,Large TTF day (-10.7%),TTF (EUR/MWh),54.29,48.767,50.731
+2026-03-04,Large TTF day (-10.7%),Brent (USD/bbl),81.4,81.4,85.41
+2026-03-04,Large TTF day (-10.7%),ILS 1Y (%),2.219,2.159,2.259
+2026-03-04,Large TTF day (-10.7%),ILS 1y1y (%),1.8844,1.8232,1.8605
+2026-03-04,Large TTF day (-10.7%),OIS 1y1y (%),2.088521199464699,2.0576136423717584,2.206654091692961
+2026-03-04,Large TTF day (-10.7%),OIS 2Y (%),2.042,2.0203,2.1323
+2026-03-04,Large TTF day (-10.7%),Bund 2Y (%),2.19,2.17,2.18
+2026-03-04,Large TTF day (-10.7%),Bund 5Y (%),2.43,2.39,2.42
+2026-03-04,Large TTF day (-10.7%),Bund 10Y (%),2.8,2.76,2.79
+2026-03-04,Large TTF day (-10.7%),Bund 30Y (%),3.42,3.41,3.42
+2026-03-04,Large TTF day (-10.7%),2s10s (bp),60.999999999999986,58.999999999999986,60.999999999999986
+2026-03-04,Large TTF day (-10.7%),5Y swap spread (bp),21.15,10.81,20.505000000000003
+2026-03-10,Large TTF day (-17.5%),TTF (EUR/MWh),56.453,47.393,49.989
+2026-03-10,Large TTF day (-17.5%),Brent (USD/bbl),98.96,87.8,91.98
+2026-03-10,Large TTF day (-17.5%),ILS 1Y (%),2.756,2.5774999999999997,2.71
+2026-03-10,Large TTF day (-17.5%),ILS 1y1y (%),1.9815,1.9705,2.0773
+2026-03-10,Large TTF day (-17.5%),OIS 1y1y (%),2.3440864951642437,2.2075536549758024,2.395961731085139
+2026-03-10,Large TTF day (-17.5%),OIS 2Y (%),2.25,2.1334999999999997,2.2889999999999997
+2026-03-10,Large TTF day (-17.5%),Bund 2Y (%),2.4,2.26,2.33
+2026-03-10,Large TTF day (-17.5%),Bund 5Y (%),2.57,2.49,2.55
+2026-03-10,Large TTF day (-17.5%),Bund 10Y (%),2.89,2.85,2.89
+2026-03-10,Large TTF day (-17.5%),Bund 30Y (%),3.42,3.44,3.48
+2026-03-10,Large TTF day (-17.5%),2s10s (bp),49.00000000000002,59.00000000000003,56.00000000000001
+2026-03-10,Large TTF day (-17.5%),5Y swap spread (bp),14.12,11.42,18.35
+2026-03-19,Large TTF day (+12.4%),TTF (EUR/MWh),54.662,61.852,59.255
+2026-03-19,Large TTF day (+12.4%),Brent (USD/bbl),107.38,108.65,112.19
+2026-03-19,Large TTF day (+12.4%),ILS 1Y (%),3.478,3.674,3.5854999999999997
+2026-03-19,Large TTF day (+12.4%),ILS 1y1y (%),2.0787,2.0994,2.2005
+2026-03-19,Large TTF day (+12.4%),OIS 1y1y (%),2.4726098762474225,2.6265956862592033,2.715105514745364
+2026-03-19,Large TTF day (+12.4%),OIS 2Y (%),2.3665000000000003,2.5275,2.611
+2026-03-19,Large TTF day (+12.4%),Bund 2Y (%),2.37,2.51,2.62
+2026-03-19,Large TTF day (+12.4%),Bund 5Y (%),2.55,2.66,2.72
+2026-03-19,Large TTF day (+12.4%),Bund 10Y (%),2.88,2.97,2.99
+2026-03-19,Large TTF day (+12.4%),Bund 30Y (%),3.45,3.5,3.49
+2026-03-19,Large TTF day (+12.4%),2s10s (bp),50.99999999999998,46.00000000000004,37.000000000000014
+2026-03-19,Large TTF day (+12.4%),5Y swap spread (bp),17.63,14.28,23.86
+2026-04-08,US-Iran ceasefire,TTF (EUR/MWh),53.247,45.301,46.175
+2026-04-08,US-Iran ceasefire,Brent (USD/bbl),109.27,94.75,95.92
+2026-04-08,US-Iran ceasefire,ILS 1Y (%),3.495,3.109,3.2525
+2026-04-08,US-Iran ceasefire,ILS 1y1y (%),2.2084,2.0873,2.0556
+2026-04-08,US-Iran ceasefire,OIS 1y1y (%),2.735603472659065,2.4535375649250346,2.505156878825643
+2026-04-08,US-Iran ceasefire,OIS 2Y (%),2.6325000000000003,2.3914999999999997,2.4288
+2026-04-08,US-Iran ceasefire,Bund 2Y (%),2.64,2.5,2.56
+2026-04-08,US-Iran ceasefire,Bund 5Y (%),2.73,2.62,2.69
+2026-04-08,US-Iran ceasefire,Bund 10Y (%),3.0,2.92,2.99
+2026-04-08,US-Iran ceasefire,Bund 30Y (%),3.47,3.45,3.49
+2026-04-08,US-Iran ceasefire,2s10s (bp),35.999999999999986,41.99999999999999,43.000000000000014
+2026-04-08,US-Iran ceasefire,5Y swap spread (bp),22.94,-2.36,19.28
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),TTF (EUR/MWh),49.989,49.69,46.773
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),Brent (USD/bbl),93.1,90.38,87.33
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),ILS 1Y (%),2.981,2.9665,2.83
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),ILS 1y1y (%),2.1525,2.1498,2.0892
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),OIS 1y1y (%),2.6935526809788612,2.6190316960148285,2.543518896008523
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),OIS 2Y (%),2.62,2.5620000000000003,2.4995000000000003
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),Bund 2Y (%),2.69,2.7,2.6
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),Bund 5Y (%),2.77,2.78,2.7
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),Bund 10Y (%),3.05,3.06,2.98
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),Bund 30Y (%),3.6,3.6,3.53
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),2s10s (bp),35.999999999999986,35.999999999999986,37.999999999999986
+2026-06-11,ECB hike #1 (DFR 2.00 -> 2.25),5Y swap spread (bp),14.485,9.785,15.125
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),TTF (EUR/MWh),79.246,82.047,79.52
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),Brent (USD/bbl),101.21,107.63,104.61
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),ILS 1Y (%),3.462,3.5869999999999997,3.499
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),ILS 1y1y (%),2.3023,2.3178,2.2736
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),OIS 1y1y (%),3.0981947405534616,3.331739270026901,3.2477456147168793
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),OIS 2Y (%),2.9565,3.1745,3.0885
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),Bund 2Y (%),3.03,3.06,3.18
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),Bund 5Y (%),3.15,3.2,3.29
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),Bund 10Y (%),3.39,3.45,3.51
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),Bund 30Y (%),3.83,3.9,3.9
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),2s10s (bp),36.00000000000003,39.000000000000014,32.999999999999964
+2026-09-10,ECB hike #2 (DFR 2.25 -> 2.50),5Y swap spread (bp),22.355,24.840000000000003,18.35

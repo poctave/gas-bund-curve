@@ -1,0 +1,4 @@
+frequency,sample,variables,n,lag_order_bic,lag_aic,lag_hqic,stable,max_root_modulus,portmanteau_p,normality_p
+daily,Oct 2019 - Oct 2026,"Brent, TTF, ILS 1y1y, OIS 1y1y, OIS 2Y",1632,1,3,0,True,0.10683421789686771,1.8026020472141994e-15,0.0
+daily,Iran war (Mar 2026+),"Brent, TTF, ILS 1y1y, OIS 1y1y, OIS 2Y",142,1,2,0,True,0.3593444072887359,0.007816388550076764,1.1703107487795432e-26
+weekly,Oct 2019 - Oct 2026 (weekly),"Brent, TTF, ILS 1y1y, OIS 1y1y, Bund 2Y, Slope 2s10s",361,1,1,0,True,0.25727134714301025,1.038153971463692e-06,0.0

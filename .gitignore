@@ -1,0 +1,17 @@
+# environment
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# original downloads at the project root (archived under canonical names in data/raw/)
+/BBSSY*.csv
+/Price History_*.xlsx
+/PNGASEUUSDM.csv
+/eurozone_hicp.csv
+/eur1Y inflation swap.xlsx
+/stock_data.csv
+
+# superseded first-pass analysis
+/gas_yield_analysis.py
+/analysis_output/

@@ -1,0 +1,41 @@
+series,issue,treatment,n_affected
+bund_30y,Bundesbank quality flags: {'Estimated value': 1},Kept (flags are informational); listed in daily_levels *_flag columns,1
+bund_30y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,3664
+bund_7y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,707
+bund_15y,Bundesbank quality flags: {'Estimated value': 4},Kept (flags are informational); listed in daily_levels *_flag columns,4
+bund_15y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,707
+bund_20y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,75
+bund_2y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,1425
+bund_5y,Bundesbank quality flags: {'Provisional value': 1},Kept (flags are informational); listed in daily_levels *_flag columns,1
+bund_5y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,2234
+bund_10y,Bundesbank quality flags: {'Corrected value': 20},Kept (flags are informational); listed in daily_levels *_flag columns,20
+bund_10y,'.' placeholders for weekends/holidays (calendar-day file),Dropped; panel built on Bundesbank business days,2784
+gas_ttf_m1_eurmwh,Missing bid or ask / close in export,Left as NaN (no forward fill),1
+gas_ttf_m1_eurmwh,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),39
+gas_ttf_m1_eurmwh,Front-month continuation: price jumps at contract roll,"One roll per month: largest open-interest jump (>1.25x) around month-end, else exchange-calendar roll day; roll-day returns excluded from regressions (flag roll_<var>; *_raw returns kept)",144
+oil_brent_m1_usdbbl,Missing bid or ask / close in export,Left as NaN (no forward fill),1
+oil_brent_m1_usdbbl,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),58
+oil_brent_m1_usdbbl,Front-month continuation: price jumps at contract roll,"One roll per month: largest open-interest jump (>1.25x) around month-end, else exchange-calendar roll day; roll-day returns excluded from regressions (flag roll_<var>; *_raw returns kept)",144
+gas_nbp_m1_gbppth,Missing bid or ask / close in export,Left as NaN (no forward fill),2
+gas_nbp_m1_gbppth,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),31
+gas_nbp_m1_gbppth,Front-month continuation: price jumps at contract roll,"One roll per month: largest open-interest jump (>1.25x) around month-end, else exchange-calendar roll day; roll-day returns excluded from regressions (flag roll_<var>; *_raw returns kept)",119
+gas_hh_m1_usdmmbtu,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),11
+gas_hh_m1_usdmmbtu,Front-month continuation: price jumps at contract roll,"One roll per month: largest open-interest jump (>1.25x) around month-end, else exchange-calendar roll day; roll-day returns excluded from regressions (flag roll_<var>; *_raw returns kept)",24
+fx_eurusd,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),89
+fx_eurgbp,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),89
+ils_eur_1y,Missing bid or ask / close in export,Left as NaN (no forward fill),1
+ils_eur_1y,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),3
+swapsprd_de5y_bp,Missing bid or ask / close in export,Left as NaN (no forward fill),1
+swapsprd_de5y_bp,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),28
+ois_estr_1m,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),41
+ois_estr_3m,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),41
+ois_estr_1y,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),41
+ois_estr_2y,Dates not in Bundesbank business-day calendar (UK/US trading days),Dropped from daily panel (calendar = German bond market days),41
+ils_eur_1y1y,"File named '1Y inflation swap' is RIC EUIL1YF1Y=R, i.e. the 1y1y FORWARD",Renamed ils_eur_1y1y; spot 1Y added separately from EUCPIZ1Y=TWEB,
+ils_eur_1y,Tradeweb 1Y ILS history only starts 2022-04-08,Used in post-2022 tests only,
+hicp_ea_idx,Two index bases spliced: fake -34.2% m/m at 1999-12,Truncated: only data from the break onward (2025=100 base) kept,47
+hicp_ea_idx,Not seasonally adjusted,"Use y/y, or m/m with calendar-month dummies",
+gas_eu_imf_usdmmbtu_mavg,"Monthly average, USD, revised by FRED, ends 2026-07",Used only for monthly cross-checks; TTF (EUR) is the primary gas variable,
+stock_data.csv,Unknown source; weekend rows duplicating Fridays; High<Open rows; does not match NGc1 closes,Excluded from all analysis,24
+Price History_20261010_1208.xlsx,2-year NBP export is an exact subset of the 10-year export,Excluded (redundant),506
+bund_*,"Asynchronous snapshot: daily Bund change loads ~equally on the previous and the same day's LSEG OIS change (0.53 / 0.49, t>10); corr(Bund2Y, OIS2Y) rises from 0.44 (1-day) to 0.67 (2-day) to 0.87 (weekly) => Bundesbank yields are observed roughly half a trading day before LSEG closes / TTF settlement",Daily Bund regressions include same-day and previous-day market moves (Dimson); total effect = sum. Full-chain mediation and VAR with Bunds run weekly; predictive tests for Bund targets skip the overlapping day,

@@ -1,0 +1,71 @@
+frequency,sample,lags,cause,effect,granger_F,granger_p,verdict
+daily,Oct 2019 - Oct 2026,1,Brent,TTF,0.23329905665472456,0.6291013504484602,no predictive content
+daily,Oct 2019 - Oct 2026,1,Brent,ILS 1y1y,6.371464048131927,0.011615870293595279,predicts
+daily,Oct 2019 - Oct 2026,1,Brent,OIS 1y1y,0.45747359245428576,0.49882630685888363,no predictive content
+daily,Oct 2019 - Oct 2026,1,Brent,OIS 2Y,0.3381213627844335,0.5609317402283513,no predictive content
+daily,Oct 2019 - Oct 2026,1,TTF,Brent,0.019116064759493224,0.8900376835800574,no predictive content
+daily,Oct 2019 - Oct 2026,1,TTF,ILS 1y1y,1.3886225384276625,0.23867234656730238,no predictive content
+daily,Oct 2019 - Oct 2026,1,TTF,OIS 1y1y,8.291447466870336,0.003993621985426241,predicts
+daily,Oct 2019 - Oct 2026,1,TTF,OIS 2Y,7.493352543090562,0.006206182571435643,predicts
+daily,Oct 2019 - Oct 2026,1,ILS 1y1y,Brent,0.0268830856691124,0.8697662188002062,no predictive content
+daily,Oct 2019 - Oct 2026,1,ILS 1y1y,TTF,2.217875457954165,0.1364594634650202,no predictive content
+daily,Oct 2019 - Oct 2026,1,ILS 1y1y,OIS 1y1y,0.212592570031444,0.6447552529667868,no predictive content
+daily,Oct 2019 - Oct 2026,1,ILS 1y1y,OIS 2Y,0.46758113015605673,0.49412155987995454,no predictive content
+daily,Oct 2019 - Oct 2026,1,OIS 1y1y,Brent,0.0057814541990746605,0.9393924280319607,no predictive content
+daily,Oct 2019 - Oct 2026,1,OIS 1y1y,TTF,0.6275638416817687,0.4282734371349822,no predictive content
+daily,Oct 2019 - Oct 2026,1,OIS 1y1y,ILS 1y1y,9.098296877368629,0.002566386731789029,predicts
+daily,Oct 2019 - Oct 2026,1,OIS 1y1y,OIS 2Y,7.942354665346129,0.004840758725416594,predicts
+daily,Oct 2019 - Oct 2026,1,OIS 2Y,Brent,0.03398547505423094,0.8537423140356087,no predictive content
+daily,Oct 2019 - Oct 2026,1,OIS 2Y,TTF,1.0568604762881713,0.3039629153118807,no predictive content
+daily,Oct 2019 - Oct 2026,1,OIS 2Y,ILS 1y1y,10.930968377398985,0.000949800001426518,predicts
+daily,Oct 2019 - Oct 2026,1,OIS 2Y,OIS 1y1y,9.447632728546294,0.002121221850821477,predicts
+daily,Iran war (Mar 2026+),1,Brent,TTF,4.5337902567359345,0.033590571171234256,predicts
+daily,Iran war (Mar 2026+),1,Brent,ILS 1y1y,0.09978769070949964,0.7521814935406669,no predictive content
+daily,Iran war (Mar 2026+),1,Brent,OIS 1y1y,0.00038301504555310535,0.9843915223096545,no predictive content
+daily,Iran war (Mar 2026+),1,Brent,OIS 2Y,0.009934085252903532,0.9206357884769726,no predictive content
+daily,Iran war (Mar 2026+),1,TTF,Brent,0.35241665527498234,0.5529457106088129,no predictive content
+daily,Iran war (Mar 2026+),1,TTF,ILS 1y1y,0.5728588331401889,0.4493872803427499,no predictive content
+daily,Iran war (Mar 2026+),1,TTF,OIS 1y1y,0.20396835515085843,0.6516805988757325,no predictive content
+daily,Iran war (Mar 2026+),1,TTF,OIS 2Y,0.057807040519146036,0.8100686546601549,no predictive content
+daily,Iran war (Mar 2026+),1,ILS 1y1y,Brent,0.5379204847259123,0.46354859794456926,no predictive content
+daily,Iran war (Mar 2026+),1,ILS 1y1y,TTF,0.5261030637057837,0.46849936678779014,no predictive content
+daily,Iran war (Mar 2026+),1,ILS 1y1y,OIS 1y1y,0.026133625995547093,0.8716224279407399,no predictive content
+daily,Iran war (Mar 2026+),1,ILS 1y1y,OIS 2Y,0.07295542087181868,0.7871632640341688,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 1y1y,Brent,0.7429035843988926,0.38903618361327086,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 1y1y,TTF,0.3711719559866775,0.5425696330775572,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 1y1y,ILS 1y1y,0.08239510881764722,0.7741649393006172,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 1y1y,OIS 2Y,0.15986618777247247,0.6894053044107782,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 2Y,Brent,0.7598582934690058,0.3836805321865472,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 2Y,TTF,0.4660590997300942,0.495038274448642,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 2Y,ILS 1y1y,0.00026973115478176634,0.9869013542127035,no predictive content
+daily,Iran war (Mar 2026+),1,OIS 2Y,OIS 1y1y,0.3007569808283109,0.583588246643465,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Brent,TTF,0.16628780458709308,0.6834733469308489,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Brent,ILS 1y1y,2.464161050763911,0.11661882484161235,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Brent,OIS 1y1y,0.1128509802424104,0.7369545719900672,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Brent,Bund 2Y,0.09093556626827638,0.7630206493030958,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Brent,Slope 2s10s,0.024194206880765547,0.8764065627844547,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,TTF,Brent,2.5247518717704214,0.11222123877371891,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,TTF,ILS 1y1y,0.45371223944057243,0.5006506107630175,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,TTF,OIS 1y1y,0.18980314170987186,0.6631247812232638,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,TTF,Bund 2Y,0.14239394034159467,0.705950315222061,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,TTF,Slope 2s10s,1.259604701333753,0.2618527816086603,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,ILS 1y1y,Brent,0.8049158220783434,0.36972934924515466,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,ILS 1y1y,TTF,0.07276582747147209,0.7873777044290748,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,ILS 1y1y,OIS 1y1y,6.517177810394373,0.01075311307722665,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,ILS 1y1y,Bund 2Y,10.916653914395607,0.0009688685206992876,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,ILS 1y1y,Slope 2s10s,13.986591398130338,0.00018899399399080472,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,OIS 1y1y,Brent,0.05628959236606644,0.8124824113433093,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,OIS 1y1y,TTF,0.25473839113773505,0.6138105743054829,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,OIS 1y1y,ILS 1y1y,0.02844592127806994,0.8660807818752769,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,OIS 1y1y,Bund 2Y,14.005316782215788,0.00018713340382590807,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,OIS 1y1y,Slope 2s10s,5.889972042439957,0.01531002686573233,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,Bund 2Y,Brent,0.003551448157141118,0.9524845812236837,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Bund 2Y,TTF,0.16280129763312115,0.6866310312892119,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Bund 2Y,ILS 1y1y,0.01725900787279309,0.8954922586930265,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Bund 2Y,OIS 1y1y,0.38466198047048134,0.5351852575509936,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Bund 2Y,Slope 2s10s,4.151368728443941,0.04172459280355825,predicts
+weekly,Oct 2019 - Oct 2026 (weekly),1,Slope 2s10s,Brent,0.6371471768653886,0.42483497267893533,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Slope 2s10s,TTF,2.5255857322082065,0.11216200882412404,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Slope 2s10s,ILS 1y1y,0.09860717238798894,0.7535383650076797,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Slope 2s10s,OIS 1y1y,1.615807669289001,0.20381652910119508,no predictive content
+weekly,Oct 2019 - Oct 2026 (weekly),1,Slope 2s10s,Bund 2Y,1.597703228864558,0.20636769910412872,no predictive content

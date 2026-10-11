@@ -1,0 +1,25 @@
+variable,description,unit,source,frequency
+bund_{t},"Yield of the current (on-the-run) German federal security, {t} maturity bucket",%,Bundesbank BBSSY.D.REN.EUR.A6xx,daily
+ois_estr_1m/3m/1y/2y,EUR €STR overnight index swap par rate,%,LSEG EUREST1M=/3M=/1Y=/2Y= (mid),"daily, from 2019-09"
+ois_estr_1y1y,1-year €STR rate 1 year forward = ((1+OIS2y)^2/(1+OIS1y))-1,%,Derived,daily
+ils_eur_1y,EUR zero-coupon inflation swap 1Y (HICPxT),%,LSEG/Tradeweb EUCPIZ1Y=TWEB (mid),"daily, from 2022-04"
+ils_eur_1y1y,EUR inflation swap 1y forward 1y (HICPxT),%,LSEG EUIL1YF1Y=R (mid),"daily, from 2016"
+gas_ttf_m1_eurmwh,ICE Endex Dutch TTF front-month futures settlement,EUR/MWh,LSEG TFMBMc1,daily
+gas_ttf_m1_usdmmbtu,TTF converted at EURUSD; 1 MWh = 3.41214 MMBtu,USD/MMBtu,Derived,daily
+gas_nbp_m1_gbppth,ICE UK NBP front-month futures,GBp/therm,LSEG NGLNMc1,"daily, from 2016-11"
+gas_nbp_m1_eurmwh,NBP converted: p/th /100 x 34.12 th/MWh / EURGBP,EUR/MWh,Derived,daily
+gas_hh_m1_usdmmbtu,NYMEX Henry Hub front-month futures,USD/MMBtu,LSEG NGc1,"daily, from 2024-10"
+oil_brent_m1_usdbbl,ICE Brent front-month futures,USD/bbl,LSEG LCOc1,daily
+oil_brent_m1_eurbbl,Brent in EUR,EUR/bbl,Derived,daily
+fx_eurusd / fx_eurgbp,Spot FX mid,USD per EUR / GBP per EUR,LSEG EUR= / EURGBP=,daily
+swapsprd_de5y_bp,5Y EUR IRS minus 5Y Bund benchmark yield (swap spread; Bund scarcity/safety premium),bp,LSEG DE5IRS5Y=RR (mid),daily
+slope_2s10s / 2s30s / 5s30s,Bund curve slopes (long minus short),bp,Derived,daily
+fly_2s5s10s,Butterfly 2*5Y - 2Y - 10Y (curvature),bp,Derived,daily
+sprd_bund2y_ois2y,2Y Bund minus 2Y €STR OIS (Schatz scarcity / collateral premium),bp,Derived,daily
+ttf_brent_ratio,TTF (USD/MMBtu) / Brent per MMBtu (bbl/5.8): gas vs oil relative price,ratio,Derived,daily
+regime,R0 pre-2021 / R1 2021-22 gas crisis / R2 2023-Feb26 / R3 Iran war (from 2026-03-02),label,Defined in src/config.py,daily
+roll_<var>,1 on front-month contract roll days (OI jump),0/1,Derived,daily
+d_<rate>,Daily change in rate,bp,Derived,daily
+r_<price>,Daily log return x100 (roll days set to NaN; *_raw keeps them),%,Derived,daily
+hicp_ea_idx / _yoy / _mom,"Euro-area HICP index (2025=100, NSA), y/y and m/m",index / %,eurozone_hicp.csv,monthly
+gas_eu_imf_usdmmbtu_mavg,"IMF Global price of natural gas, EU (monthly average)",USD/MMBtu,FRED PNGASEUUSDM,monthly
