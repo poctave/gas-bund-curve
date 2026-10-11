@@ -180,7 +180,10 @@ def build_daily() -> tuple[pd.DataFrame, pd.DataFrame]:
     panel["gas_nbp_m1_eurmwh"] = panel.gas_nbp_m1_gbppth / 100 * THERM_PER_MWH / panel.fx_eurgbp
     panel["oil_brent_m1_eurbbl"] = panel.oil_brent_m1_usdbbl / panel.fx_eurusd
     panel["gas_ttf_m1_usdmmbtu"] = panel.gas_ttf_m1_eurmwh * panel.fx_eurusd / 3.41214
+    panel["slope_2s5s"] = (panel.bund_5y - panel.bund_2y) * 100
     panel["slope_2s10s"] = (panel.bund_10y - panel.bund_2y) * 100
+    panel["slope_5s10s"] = (panel.bund_10y - panel.bund_5y) * 100
+    panel["slope_10s30s"] = (panel.bund_30y - panel.bund_10y) * 100
     panel["slope_2s30s"] = (panel.bund_30y - panel.bund_2y) * 100
     panel["slope_5s30s"] = (panel.bund_30y - panel.bund_5y) * 100
     panel["fly_2s5s10s"] = (2 * panel.bund_5y - panel.bund_2y - panel.bund_10y) * 100
@@ -196,7 +199,7 @@ def build_daily() -> tuple[pd.DataFrame, pd.DataFrame]:
 RATE_VARS = ["bund_2y", "bund_5y", "bund_7y", "bund_10y", "bund_15y", "bund_20y", "bund_30y",
              "ois_estr_1m", "ois_estr_3m", "ois_estr_1y", "ois_estr_2y", "ois_estr_1y1y",
              "ils_eur_1y", "ils_eur_1y1y"]
-BP_VARS = ["slope_2s10s", "slope_2s30s", "slope_5s30s", "fly_2s5s10s", "sprd_bund2y_ois2y",
+BP_VARS = ["slope_2s5s", "slope_2s10s", "slope_5s10s", "slope_10s30s", "slope_2s30s", "slope_5s30s", "fly_2s5s10s", "sprd_bund2y_ois2y",
            "swapsprd_de5y_bp"]
 PRICE_VARS = ["gas_ttf_m1_eurmwh", "oil_brent_m1_usdbbl", "oil_brent_m1_eurbbl", "gas_nbp_m1_gbppth",
               "gas_nbp_m1_eurmwh", "gas_hh_m1_usdmmbtu", "fx_eurusd", "fx_eurgbp"]
@@ -287,7 +290,7 @@ DICT_ROWS = [
     ("oil_brent_m1_eurbbl", "Brent in EUR", "EUR/bbl", "Derived", "daily"),
     ("fx_eurusd / fx_eurgbp", "Spot FX mid", "USD per EUR / GBP per EUR", "LSEG EUR= / EURGBP=", "daily"),
     ("swapsprd_de5y_bp", "5Y EUR IRS minus 5Y Bund benchmark yield (swap spread; Bund scarcity/safety premium)", "bp", "LSEG DE5IRS5Y=RR (mid)", "daily"),
-    ("slope_2s10s / 2s30s / 5s30s", "Bund curve slopes (long minus short)", "bp", "Derived", "daily"),
+    ("slope_2s5s / 2s10s / 5s10s / 10s30s / 2s30s / 5s30s", "Bund curve slopes (long minus short)", "bp", "Derived", "daily"),
     ("fly_2s5s10s", "Butterfly 2*5Y - 2Y - 10Y (curvature)", "bp", "Derived", "daily"),
     ("sprd_bund2y_ois2y", "2Y Bund minus 2Y €STR OIS (Schatz scarcity / collateral premium)", "bp", "Derived", "daily"),
     ("ttf_brent_ratio", "TTF (USD/MMBtu) / Brent per MMBtu (bbl/5.8): gas vs oil relative price", "ratio", "Derived", "daily"),

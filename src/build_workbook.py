@@ -143,15 +143,17 @@ def build_results() -> None:
                  "Transmission regressions, daily: change in rate on TTF, Brent, EURUSD - by regime",
                  ["bp_per_10pct_ttf = total effect of a +10% TTF move in bp (same day + previous day for Bundesbank "
                   "yields, which are snapshotted before the market close). Newey-West HAC SEs.",
-                  "p_ttf_holm: Holm-corrected across the 17 dependent variables within each regime (multiple testing)."],
-                 cols=["dependent", "regime", "n", "async_adjusted", "bp_per_10pct_ttf", "t_ttf", "p_ttf", "p_ttf_holm",
+                  "Multiple testing (Holm, within each regime): p_ttf_holm = across all 20 dependent variables (strictest); "
+                  "p_ttf_holm_family = within its family (rates & spreads: 13 series; curve shape: 7 series)."],
+                 cols=["dependent", "family", "regime", "n", "async_adjusted", "bp_per_10pct_ttf", "t_ttf", "p_ttf",
+                       "p_ttf_holm", "p_ttf_holm_family",
                        "beta_ttf_same_day", "beta_ttf_prev_day", "bp_per_10pct_brent", "t_brent", "p_brent", "r2"])
     result_sheet("Transmission_Weekly", "04_transmission_weekly",
                  "Transmission regressions, weekly (Fri-Fri): robustness to data timing",
                  ["Gas/Brent weekly returns = sum of roll-cleaned daily returns. For Bundesbank yields the market "
                   "window is lagged one business day (Fri-Thu)."],
-                 cols=["dependent", "regime", "n", "bp_per_10pct_ttf", "t_ttf", "p_ttf", "p_ttf_holm",
-                       "bp_per_10pct_brent", "t_brent", "p_brent", "r2"])
+                 cols=["dependent", "family", "regime", "n", "bp_per_10pct_ttf", "t_ttf", "p_ttf", "p_ttf_holm",
+                       "p_ttf_holm_family", "bp_per_10pct_brent", "t_brent", "p_brent", "r2"])
     result_sheet("Regime_Tests", "05_regime_interaction",
                  "Is the gas effect different in the war and in 2021-22? Pooled model with regime interactions",
                  ["Base = 2014-21 + 2023-Feb26 combined. H0: regime total effect = base total effect (HAC Wald)."])
@@ -190,6 +192,16 @@ def build_results() -> None:
                   "price level per +10%.", "Model B: HICP y/y on 12-month energy price changes lagged L months (lag scan)."])
     result_sheet("Curve_PCA", "16_curve_pca", "Bund curve principal components and their gas sensitivity",
                  ["PC1 = level, PC2 = slope (+ = steepening), PC3 = curvature. Sensitivities in bp per +10% TTF."])
+    result_sheet("Curve_Slopes", "17_curve_slopes", "Which flattener carries gas? All Bund slopes compared",
+                 ["Slope = long yield minus short yield, bp. Sensitivities in bp of slope change per +10% TTF (negative = "
+                  "flattening). Daily = same + previous day (timing-adjusted); weekly = Fri-Fri.",
+                  "Lower rows: how each slope actually moved during the war. Tenor moves: second table below."])
+    ws = wb["Curve_Slopes"]
+    tm = pd.read_csv(TABLES / "17b_tenor_moves_war.csv")
+    r0 = ws.max_row + 3
+    ws.cell(row=r0 - 1, column=1, value="Bund yield change by tenor, 27 Feb - 9 Oct 2026").font = BOLD
+    write_df(ws, tm, r0)
+    ws.freeze_panes = ws.cell(row=TABLE_POS["Curve_Slopes"][0] + 1, column=2)
     result_sheet("Rolling_Betas", "08_rolling_betas_120d", "Rolling 120-day TTF sensitivity (bp per +10%)",
                  ["Stepped weekly. 95% band from HAC SEs."])
     event_sheet()
@@ -267,14 +279,22 @@ def summary_sheet() -> None:
         ("3b. Break in policy sensitivity", "sup-Wald stat, €STR OIS 2Y (5% cv = 8.68)",
          "Structural_Breaks", FRAMES["Structural_Breaks"].dependent == "€STR OIS 2Y", "sup_wald_stat", "robust_wald_p",
          "CONFIRMED (1%)", "The estimated break date is in the first week of the war (see Structural_Breaks)."),
-        ("4. Policy pricing -> Bund front end", "Bund 2Y, bp per +10% TTF, war regime (daily, Holm p shown)",
-         T, (td.dependent == "Bund 2Y") & (td.regime == war), "bp_per_10pct_ttf", "p_ttf_holm", "SUPPORTED",
-         "A +10% gas day lifts the Schatz ~4bp in the war (weekly: ~3.6bp, p = 0.001). The effect survives Holm correction "
-         "for testing 17 variables. Weekly mediation: OIS 1y1y passes ~0.7bp per bp into the 2Y Bund."),
+        ("4. Policy pricing -> Bund front end", "Bund 2Y, bp per +10% TTF, war regime (daily; Holm-corrected p within the rates family)",
+         T, (td.dependent == "Bund 2Y") & (td.regime == war), "bp_per_10pct_ttf", "p_ttf_holm_family", "SUPPORTED",
+         "A +10% gas day lifts the Schatz ~4bp in the war (raw p = 0.003; weekly: ~3.6bp, p = 0.001). After Holm correction "
+         "it stays significant within the 13 rate series (p = 0.036) and is borderline across all 20 series tested "
+         "(p = 0.057). Weekly mediation: OIS 1y1y passes ~0.7bp per bp into the 2Y Bund."),
         ("4b. Curve shape", "Slope 2s30s, bp per +10% TTF, war regime (daily)",
          T, (td.dependent == "Slope 2s30s") & (td.regime == war), "bp_per_10pct_ttf", "p_ttf", "SUPPORTED: BEAR FLATTENING",
          "The 30Y barely moves (~0.2bp) while the front end rises: gas shocks are priced as POLICY shocks, not as term-premium "
          "or long-run inflation shocks. Confirmed by the PCA slope factor and by weekly 5s30s (-2.6bp, p < 0.001)."),
+        ("4c. Which flattener", "Slope 2s30s, weekly, bp per +10% TTF, war",
+         "Curve_Slopes", FRAMES["Curve_Slopes"].slope == "2s30s", "war weekly: bp per +10% TTF", "war weekly: p",
+         "2s30s LARGEST; 2s10s CLEANEST",
+         "All six slopes flatten on gas in the war. 2s30s is the largest and is significant daily and weekly, but Brent "
+         "flattens it too. 2s10s (-2.8bp daily) and 2s5s (-2.1bp daily) respond to gas but not to oil, so they are the "
+         "purest gas expressions; 2s5s fades within the week. Before 2021 gas slightly STEEPENED the curve (front end "
+         "pinned at the lower bound)."),
         ("5. Regime dependence", "Bund 2Y, bp per +10% TTF, 2021-22 gas crisis (daily)",
          T, (td.dependent == "Bund 2Y") & (td.regime == cris), "bp_per_10pct_ttf", "p_ttf", "STRONGLY SUPPORTED",
          "In 2021-22 higher gas meant LOWER Bund and OIS rates: markets priced recession risk and an ECB that called inflation "
@@ -495,7 +515,9 @@ def catalog_sheet() -> None:
         ["Transmission", "OLS with Newey-West HAC, by regime", "How much do rates move per gas move?", "beta = 0",
          "War: ILS 1Y, OIS, Bund 2Y, 2s30s significant; 2021-22 negative; normal times ~0.", "Core result: gas is a front-end policy driver in the war.", "Transmission_Daily / _Weekly"],
         ["Multiple testing", "Holm correction", "Are results artefacts of testing many series?", "All betas = 0",
-         "Bund 2Y and ILS 1Y survive within the war family.", "The headline is not a data-mining artefact.", "Transmission_Daily"],
+         "War regime: ILS 1Y survives across all 20 series (p = 0.005); Bund 2Y survives within the rates family "
+         "(p = 0.036), borderline across all 20 (p = 0.057); 2s5s survives within the curve-shape family (p = 0.045).",
+         "The headline is not a data-mining artefact, but individual slope results are suggestive.", "Transmission_Daily"],
         ["Regime", "Interaction Wald test", "Is the war beta different from normal?", "Equal betas",
          "Rejected for Bund 2Y, ILS 1Y, 2s10s, 2s30s.", "The link is regime-specific.", "Regime_Tests"],
         ["Regime", "Chow, HAC Wald, Quandt-Andrews sup-Wald", "Is there a break, and when?", "No break",
@@ -525,6 +547,9 @@ def catalog_sheet() -> None:
          "No for Bunds and ILS; fragile yes for OIS in the war (31 forecasts).", "No robust forecasting edge.", "OOS_Forecast"],
         ["Macro link", "Distributed lag + y/y lag scan", "Does gas predict realised inflation?", "No effect at any lag",
          "Joint lags significant; peak at 9-12 months.", "Gas is a leading indicator of the inflation prints the ECB reacts to.", "HICP_Passthrough"],
+        ["Curve", "Slope comparison (2s5s, 2s10s, 5s10s, 10s30s, 2s30s, 5s30s)", "Which flattener carries gas?", "beta = 0",
+         "All flatten in the war; 2s30s largest and robust; 2s10s / 2s5s gas-specific (no oil effect); 2s5s fades weekly.",
+         "Choose 2s10s for a pure gas view, 2s30s for size (but it carries oil risk).", "Curve_Slopes"],
         ["Curve", "PCA (level / slope / curvature)", "Which curve factor does gas move?", "-",
          "War: slope factor significantly negative (flattening); level positive but less precise.", "Policy shock signature.", "Curve_PCA"],
         ["Events", "Event study", "What happened on key dates?", "-", "War onset (2-day): Bund 2Y +16bp vs 30Y +6bp, 2s10s -5bp. Ceasefire: OIS 1y1y -23bp, 2s10s +7bp (reversal).",
@@ -562,7 +587,8 @@ def charts_sheet() -> None:
     ws["A2"] = "Rendered by src/figures.py; PNGs in output/figures/."
     ws["A2"].font = NOTE
     row = 4
-    for f in ["f1_war_timeline", "f2_regime_betas", "f3_rolling_beta", "f4_local_projections", "f5_hicp_lag_scan"]:
+    for f in ["f1_war_timeline", "f2_regime_betas", "f6_flatteners", "f7_tenor_moves_war", "f3_rolling_beta",
+              "f4_local_projections", "f5_hicp_lag_scan"]:
         img = Image(str(FIGURES / f"{f}.png"))
         scale = 820 / img.width
         img.width, img.height = int(img.width * scale), int(img.height * scale)

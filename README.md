@@ -8,8 +8,8 @@ Do European gas prices drive, and predict, moves on the German Bund curve throug
 
 | File | What it is |
 | --- | --- |
-| `output/Gas_Bund_Research_Recap.pdf` | 10-page plain-language recap: the economic story, instruments, data fixes, tests, results, glossary |
-| `output/Gas_Bund_Research_Workbook.xlsx` | Full results (29 sheets). Start with `Executive_Summary` |
+| `output/Gas_Bund_Research_Recap.pdf` | 12-page plain-language recap: the economic story, instruments, data fixes, tests, results, glossary |
+| `output/Gas_Bund_Research_Workbook.xlsx` | Full results (30 sheets). Start with `Executive_Summary` |
 | `docs/01_research_foundation.md` | Phase 1 memo: benchmark definitions, data audit, validity of the thesis |
 
 ## Repository layout
@@ -66,4 +66,4 @@ Every test family has its own sheet in the workbook:
 - lead/lag timing tests and block-bootstrap mediation;
 - VAR with Granger causality and variance decomposition;
 - local projections and out-of-sample forecasts (Clark-West);
-- HICP pass-through, curve PCA and an event study.
+- HICP pass-through, curve PCA, a comparison of all Bund slopes (2s5s, 2s10s, 5s10s, 10s30s, 2s30s, 5s30s) and an event study.

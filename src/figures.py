@@ -143,6 +143,43 @@ def fig_hicp_lags() -> None:
     plt.close(fig)
 
 
+def fig_flatteners() -> None:
+    c = pd.read_csv(TABLES / "17_curve_slopes.csv")
+    fig, ax = plt.subplots(figsize=(9, 3.9))
+    xs = np.arange(len(c))
+    wd = 0.32
+    for k, (col, pcol, lab, colr) in enumerate([
+            ("Iran war (Mar 2026+): bp per +10% TTF", "Iran war (Mar 2026+): p", "Daily (same + previous day)", S1),
+            ("war weekly: bp per +10% TTF", "war weekly: p", "Weekly (Fri-Fri)", S2)]):
+        pos = xs + (k - 0.5) * (wd + 0.02)
+        ax.bar(pos, c[col], width=wd, color=colr, label=lab, edgecolor=SURFACE, linewidth=1)
+        for p_, v, pv in zip(pos, c[col], c[pcol]):
+            if pv < 0.05:
+                ax.annotate("*", (p_, v), xytext=(0, -10), textcoords="offset points", ha="center", color=INK2, fontsize=10)
+    ax.axhline(0, color=AXIS, lw=0.8)
+    ax.set_xticks(xs, c.slope, color=INK2)
+    ax.set_ylabel("slope change, bp per +10% TTF")
+    ax.set_title("Iran war: every gas-driven flattener points the same way; 2s30s is the largest and most robust")
+    ax.legend(loc="lower left", ncol=2)
+    ax.annotate("* p < 0.05 (Newey-West HAC)", (1, -0.13), xycoords="axes fraction", ha="right", va="top",
+                color=MUTED, fontsize=7.5)
+    fig.savefig(FIGURES / "f6_flatteners.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
+def fig_tenor_moves() -> None:
+    t = pd.read_csv(TABLES / "17b_tenor_moves_war.csv")
+    fig, ax = plt.subplots(figsize=(9, 3.4))
+    ax.bar(t.tenor, t["change (bp)"], width=0.45, color=S1)
+    for x, v in zip(t.tenor, t["change (bp)"]):
+        ax.annotate(f"+{v:.0f}", (x, v), xytext=(0, 3), textcoords="offset points", ha="center", color=INK2, fontsize=8.5)
+    ax.set_ylabel("yield change, bp")
+    ax.set_title("Bund yields 27 Feb to 9 Oct 2026: each tenor rose less than the one before it (bear flattening)")
+    ax.tick_params(axis="x", colors=INK2)
+    fig.savefig(FIGURES / "f7_tenor_moves_war.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     lv = pd.read_csv(CLEAN / "daily_levels.csv", index_col=0, parse_dates=True)
     fig_timeline(lv)
@@ -150,6 +187,8 @@ def main() -> None:
     fig_rolling()
     fig_local_projection()
     fig_hicp_lags()
+    fig_flatteners()
+    fig_tenor_moves()
     print("figures written to", FIGURES)
 
 

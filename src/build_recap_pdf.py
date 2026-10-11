@@ -89,6 +89,8 @@ oos = T("13_oos_forecast")
 tim = T("09_lead_lag_timing")
 ev = T("15_event_study")
 pca = T("16_curve_pca")
+slopes = T("17_curve_slopes").set_index("slope")
+tenor_moves = T("17b_tenor_moves_war")
 diag = T("06_residual_diagnostics")
 lp = T("12_local_projections")
 
@@ -109,6 +111,8 @@ N = {
     "ois11_brent_war": tr(td, "€STR OIS 1y1y", WAR, "bp_per_10pct_brent"),
     "b2_war": tr(td, "Bund 2Y", WAR), "b2_war_p": tr(td, "Bund 2Y", WAR, "p_ttf"),
     "b2_war_holm": tr(td, "Bund 2Y", WAR, "p_ttf_holm"),
+    "b2_war_holm_fam": tr(td, "Bund 2Y", WAR, "p_ttf_holm_family"),
+    "s25_holm_fam": tr(td, "Slope 2s5s", WAR, "p_ttf_holm_family"),
     "b2_war_w": tr(tw, "Bund 2Y", WAR), "b2_war_w_p": tr(tw, "Bund 2Y", WAR, "p_ttf"),
     "b2_crisis": tr(td, "Bund 2Y", CRISIS), "b2_crisis_p": tr(td, "Bund 2Y", CRISIS, "p_ttf"),
     "b2_pre": tr(td, "Bund 2Y", PRE), "b2_norm": tr(td, "Bund 2Y", NORM),
@@ -277,6 +281,10 @@ def build() -> None:
         ["4. → Bund curve",
          f"Bund 2Y {bp(N['b2_war'])} ({p(N['b2_war_p'])}), Bund 30Y {bp(N['b30_war'])} (not significant), "
          f"2s30s slope {bp(N['s230_war'])}.", "Yes: bear flattening"],
+        ["Which flattener",
+         f"All six slopes flatten. 2s30s largest ({bp(slopes.loc['2s30s', 'Iran war (Mar 2026+): bp per +10% TTF'])} daily, "
+         f"{bp(slopes.loc['2s30s', 'war weekly: bp per +10% TTF'])} weekly). 2s10s and 2s5s react to gas but not to oil.",
+         "2s10s purest, 2s30s largest"],
         ["Regime dependence",
          f"Bund 2Y {bp(N['b2_crisis'])} in 2021-22, ~0 in normal times, {bp(N['b2_war'])} in the war. "
          f"War vs normal difference {p(N['ri_b2_p'])}.", "Strong"],
@@ -397,8 +405,10 @@ def build() -> None:
          "'statistically significant'.", f"Bund 2Y in the war: {p(N['b2_war_p'])}, so very unlikely to be luck."],
         ["<b>Robust (HAC) standard errors</b>", "Market data have fat tails, volatility bursts and some "
          "autocorrelation. Newey-West HAC errors stay valid under all three.", "Used for every regression."],
-        ["<b>Multiple testing (Holm)</b>", "Testing 17 series raises the odds of a fluke. Holm correction raises the bar.",
-         f"Bund 2Y in the war still passes: corrected {p(N['b2_war_holm'])}."],
+        ["<b>Multiple testing (Holm)</b>", "Testing 20 series raises the odds of a fluke. Holm correction raises the bar, "
+         "either across all series or within a family of related ones.",
+         f"Bund 2Y in the war: corrected {p(N['b2_war_holm_fam'])} within the 13 rate series, {p(N['b2_war_holm'])} "
+         "across all 20 (borderline)."],
         ["<b>Regimes</b>", "Separate periods with different market behaviour.",
          "2014-21 pre-crisis · 2021-22 gas crisis · 2023-Feb 2026 normalisation · Iran war from 2 Mar 2026."],
         ["<b>Daily vs weekly</b>", "Daily = more data; weekly = immune to the timing mismatch.",
@@ -439,6 +449,8 @@ def build() -> None:
          "Not for Bunds; fragile gain for OIS in the war.", "No robust forecasting edge."],
         ["HICP pass-through (lag scan)", "Does gas predict realised inflation?", "Yes, 6-12 months ahead.",
          "This is where gas really predicts."],
+        ["Slope comparison (2s5s ... 5s30s)", "Which flattener carries gas?",
+         "All flatten in the war; 2s30s largest; 2s10s and 2s5s gas-specific.", "Picks the cleanest expression of the view."],
         ["Curve PCA", "Which curve movement does gas cause?",
          f"Slope factor {bp(N['pca_slope'])} ({p(N['pca_slope_p'])}).", "Flattening: a policy-shock signature."],
         ["Event study", "What happened on key dates?",
@@ -465,6 +477,36 @@ def build() -> None:
                    f"{abs(N['s530_war_w']):.1f}bp ({p(N['s530_war_w_p'])})."))
     st.append(figure("f2_regime_betas", "Figure 3. Sensitivity to a +10% TTF move, by regime (daily, same day plus "
                                         "previous day for Bunds). * = p < 0.05.", W * 0.85))
+    st.append(para("Which flattener carries gas?", "h2"))
+    st.append(para(f"Every slope flattened during the war because each tenor rose less than the one before it: 2Y "
+                   f"+{tenor_moves.iloc[0]['change (bp)']:.0f}bp, 10Y +{tenor_moves.iloc[3]['change (bp)']:.0f}bp, 30Y "
+                   f"+{tenor_moves.iloc[6]['change (bp)']:.0f}bp. The slopes differ in how cleanly they carry gas."))
+    srows = [["Slope", "War daily, bp per +10% TTF", "War weekly", "Brent effect (war)", "War vs normal (p)",
+              "Change in war"]]
+    for nm in ["2s5s", "2s10s", "5s10s", "10s30s", "2s30s", "5s30s"]:
+        r = slopes.loc[nm]
+        srows.append([f"<b>{nm}</b>",
+                      f"{bp(r['Iran war (Mar 2026+): bp per +10% TTF'])} ({p(r['Iran war (Mar 2026+): p'])})",
+                      f"{bp(r['war weekly: bp per +10% TTF'])} ({p(r['war weekly: p'])})",
+                      f"{bp(r['war daily: Brent bp per +10%'])} ({p(r['war daily: Brent p'])})",
+                      f"{r['war vs base: p']:.3f}",
+                      f"{r['level 27 Feb 2026 (bp)']:.0f} → {r['level 9 Oct 2026 (bp)']:.0f}bp"])
+    st.append(table(srows, [W * 0.1, W * 0.22, W * 0.2, W * 0.2, W * 0.12, W * 0.16]))
+    st.append(Spacer(1, 6))
+    st += bullets([
+        "<b>2s30s</b>: the largest and most robust gas flattener, significant both daily and weekly. It also flattens "
+        "on oil, so it is an energy trade more than a pure gas trade.",
+        "<b>2s10s</b>: significant daily, borderline weekly, and no oil effect: the cleanest gas-to-ECB expression.",
+        f"<b>2s5s</b>: the sharpest same-day reaction (survives correction within the curve family, "
+        f"{p(N['s25_holm_fam'])}), but it fades within the week as the 5Y catches up with the 2Y.",
+        "<b>5s30s, 10s30s</b>: the long end flattens on weekly data, driven by energy in general (oil as much as gas).",
+        "<b>Regime</b>: before 2021 gas slightly <i>steepened</i> the curve, because the front end was pinned at the "
+        "lower bound and only long yields could move. In 2021-22 slopes did not move; the whole curve shifted.",
+    ])
+    st.append(figure("f6_flatteners", "Figure 4. Slope change per +10% TTF in the war, daily vs weekly. * = p < 0.05.",
+                     W * 0.85))
+    st.append(figure("f7_tenor_moves_war", "Figure 5. Change in Bund yields by tenor, 27 February to 9 October 2026.",
+                     W * 0.8))
     st.append(para("How much goes through inflation expectations?", "h2"))
     st.append(para(f"In the war, about {N['med_ind_share'] * 100:.0f}% of gas's daily effect on the expected ECB rate runs "
                    f"through the 1y1y inflation swap; the rest is priced directly. At weekly frequency, the indirect "
@@ -473,9 +515,9 @@ def build() -> None:
     st.append(para("Does the effect persist or predict?", "h2"))
     st.append(para("The response happens on the day (two days for Bunds, because of the timing mismatch) and then "
                    "stays flat or fades: no drift that a trader could exploit."))
-    st.append(figure("f4_local_projections", "Figure 4. Cumulative response to a +10% TTF move over 20 business days "
+    st.append(figure("f4_local_projections", "Figure 6. Cumulative response to a +10% TTF move over 20 business days "
                                              "(local projections, 95% bands).", W * 0.9))
-    st.append(figure("f3_rolling_beta", "Figure 5. Rolling 120-day sensitivity of the Bund 2Y and OIS 1y1y to gas. "
+    st.append(figure("f3_rolling_beta", "Figure 7. Rolling 120-day sensitivity of the Bund 2Y and OIS 1y1y to gas. "
                                         "Shaded: 2021-22 gas crisis. Vertical line: war onset.", W * 0.85))
 
     # 8 Meaning -------------------------------------------------------------
@@ -504,7 +546,7 @@ def build() -> None:
         st += [para(head, "h2"), para(text)]
     st.append(Spacer(1, 4))
     st.append(callout("<b>Practical takeaway.</b> Use gas as a regime-dependent front-end and curve-shape factor. Monitor "
-                      "its rolling sensitivity (Figure 5): a fall toward zero or below would signal that markets again see "
+                      "its rolling sensitivity (Figure 7): a fall toward zero or below would signal that markets again see "
                       "gas as a growth risk rather than an ECB trigger."))
 
     # 9 Limits --------------------------------------------------------------
@@ -527,6 +569,8 @@ def build() -> None:
         ["Term", "Definition"],
         ["Basis point (bp)", "0.01 percentage point. A yield moving from 3.00% to 3.04% has risen 4bp."],
         ["Bear flattening", "Yields rise (bear) and short yields rise more than long ones, so the curve flattens."],
+        ["2s5s, 2s10s, 2s30s ...", "Slope between two maturities: e.g. 2s10s = 10-year minus 2-year yield, in bp. "
+         "A falling slope = flattening."],
         ["TTF", "Title Transfer Facility, the Dutch gas hub that serves as Europe's gas price benchmark."],
         ["Front-month / continuation", "The futures contract closest to delivery; a 'continuation' series rolls to the "
          "next contract when one expires."],
@@ -557,7 +601,7 @@ def build() -> None:
     st.append(table([
         ["What", "Where"],
         ["This recap", "output/Gas_Bund_Research_Recap.pdf"],
-        ["Full results workbook (29 sheets)", "output/Gas_Bund_Research_Workbook.xlsx: start with Executive_Summary"],
+        ["Full results workbook (30 sheets)", "output/Gas_Bund_Research_Workbook.xlsx: start with Executive_Summary"],
         ["Phase 1 research memo", "docs/01_research_foundation.md"],
         ["Clean data", "data/clean/: daily_levels, daily_changes, weekly_changes, monthly_panel, data_dictionary"],
         ["Raw data (renamed copies)", "data/raw/"],

@@ -35,7 +35,8 @@ CONTROLS = [OIL, FX]
 Y_LABELS = {
     "d_bund_2y": "Bund 2Y", "d_bund_5y": "Bund 5Y", "d_bund_7y": "Bund 7Y", "d_bund_10y": "Bund 10Y",
     "d_bund_15y": "Bund 15Y", "d_bund_30y": "Bund 30Y",
-    "d_slope_2s10s": "Slope 2s10s", "d_slope_2s30s": "Slope 2s30s", "d_slope_5s30s": "Slope 5s30s",
+    "d_slope_2s5s": "Slope 2s5s", "d_slope_2s10s": "Slope 2s10s", "d_slope_5s10s": "Slope 5s10s",
+    "d_slope_10s30s": "Slope 10s30s", "d_slope_2s30s": "Slope 2s30s", "d_slope_5s30s": "Slope 5s30s",
     "d_fly_2s5s10s": "Fly 2s5s10s",
     "d_ois_estr_1y": "€STR OIS 1Y", "d_ois_estr_2y": "€STR OIS 2Y", "d_ois_estr_1y1y": "€STR OIS 1y1y",
     "d_ils_eur_1y": "Infl. swap 1Y", "d_ils_eur_1y1y": "Infl. swap 1y1y",
@@ -172,7 +173,8 @@ def cointegration(lv: pd.DataFrame) -> pd.DataFrame:
 # =========================================================================== 2. transmission
 TRANSMISSION_Y = ["d_ils_eur_1y", "d_ils_eur_1y1y", "d_ois_estr_1y", "d_ois_estr_1y1y", "d_ois_estr_2y",
                   "d_bund_2y", "d_bund_5y", "d_bund_7y", "d_bund_10y", "d_bund_15y", "d_bund_30y",
-                  "d_slope_2s10s", "d_slope_2s30s", "d_slope_5s30s", "d_fly_2s5s10s",
+                  "d_slope_2s5s", "d_slope_2s10s", "d_slope_5s10s", "d_slope_10s30s", "d_slope_2s30s",
+                  "d_slope_5s30s", "d_fly_2s5s10s",
                   "d_swapsprd_de5y_bp", "d_sprd_bund2y_ois2y"]
 
 
@@ -207,9 +209,15 @@ def transmission(d: pd.DataFrame, freq: str) -> pd.DataFrame:
                          "r2": res.rsquared})
     out = pd.DataFrame(rows)
     # Holm correction across the dependent variables within each regime (family = one regime)
+    # Holm correction within each regime: (i) across all dependent variables (strictest);
+    # (ii) within its family - rate levels & spreads vs curve shape (slopes, fly)
+    out["family"] = np.where(out.dep_var.str.startswith(("d_slope_", "d_fly_")), "curve shape", "rates & spreads")
     out["p_ttf_holm"] = np.nan
+    out["p_ttf_holm_family"] = np.nan
     for reg, g in out.groupby("regime"):
         out.loc[g.index, "p_ttf_holm"] = multipletests(g.p_ttf, method="holm")[1]
+        for fam, gf in g.groupby("family"):
+            out.loc[gf.index, "p_ttf_holm_family"] = multipletests(gf.p_ttf, method="holm")[1]
     return save(f"04_transmission_{freq}", out)
 
 
@@ -218,7 +226,8 @@ def regime_interaction(d: pd.DataFrame) -> pd.DataFrame:
     H0: total TTF effect in regime = base total effect (one linear restriction, HAC)."""
     rows = []
     for y in ["d_ils_eur_1y", "d_ils_eur_1y1y", "d_ois_estr_1y1y", "d_ois_estr_2y", "d_bund_2y", "d_bund_10y",
-              "d_bund_30y", "d_slope_2s10s", "d_slope_2s30s", "d_swapsprd_de5y_bp"]:
+              "d_bund_30y", "d_slope_2s5s", "d_slope_2s10s", "d_slope_5s10s", "d_slope_10s30s", "d_slope_2s30s",
+              "d_slope_5s30s", "d_swapsprd_de5y_bp"]:
         base = market_X(d, y)
         sub = pd.concat([d[[y, "regime"]], base], axis=1).dropna()
         X = sub[base.columns].copy()
@@ -315,7 +324,7 @@ def structural_breaks(d: pd.DataFrame) -> pd.DataFrame:
        (c) Quandt-Andrews sup-Wald for an unknown break date in the total TTF effect (15% trimming)."""
     from scipy.stats import f as fdist
     rows = []
-    for y in ["d_bund_2y", "d_bund_10y", "d_slope_2s10s", "d_slope_2s30s", "d_ils_eur_1y1y", "d_ois_estr_1y1y",
+    for y in ["d_bund_2y", "d_bund_10y", "d_slope_2s5s", "d_slope_2s10s", "d_slope_2s30s", "d_ils_eur_1y1y", "d_ois_estr_1y1y",
               "d_ois_estr_2y"]:
         Xm_all = market_X(d, y)
         data = pd.concat([d[y], Xm_all], axis=1).loc["2023-01-01":].dropna()
@@ -729,6 +738,48 @@ def curve_pca(d: pd.DataFrame) -> pd.DataFrame:
     return save("16_curve_pca", pd.DataFrame(rows))
 
 
+SLOPES = {"2s5s": ("bund_2y", "bund_5y"), "2s10s": ("bund_2y", "bund_10y"), "5s10s": ("bund_5y", "bund_10y"),
+          "10s30s": ("bund_10y", "bund_30y"), "2s30s": ("bund_2y", "bund_30y"), "5s30s": ("bund_5y", "bund_30y")}
+
+
+def curve_slopes(lv: pd.DataFrame) -> pd.DataFrame:
+    """One row per slope: gas sensitivity by regime (daily), war weekly, Brent in the war, war-vs-base test,
+    and how the slope actually moved during the war. Reads the transmission / interaction tables."""
+    td, tw, ri = RESULTS["04_transmission_daily"], RESULTS["04_transmission_weekly"], RESULTS["05_regime_interaction"]
+    pick = lambda df, dep, reg, col: float(df[(df.dependent == dep) & (df.regime == reg)][col].iloc[0])
+    war, pre = pd.Timestamp("2026-02-27"), pd.Timestamp("2026-10-09")
+    rows = []
+    for nm in SLOPES:
+        dep = f"Slope {nm}"
+        lvl = lv[f"slope_{nm}"]
+        hist = lvl.loc["2014-10-01":].dropna()
+        row = {"slope": nm}
+        for reg in REGIME_ORDER:
+            row[f"{REGIME_LABELS[reg]}: bp per +10% TTF"] = pick(td, dep, REGIME_LABELS[reg], "bp_per_10pct_ttf")
+            row[f"{REGIME_LABELS[reg]}: p"] = pick(td, dep, REGIME_LABELS[reg], "p_ttf")
+        row["war weekly: bp per +10% TTF"] = pick(tw, dep, REGIME_LABELS["R3_iran_war"], "bp_per_10pct_ttf")
+        row["war weekly: p"] = pick(tw, dep, REGIME_LABELS["R3_iran_war"], "p_ttf")
+        row["war daily: Brent bp per +10%"] = pick(td, dep, REGIME_LABELS["R3_iran_war"], "bp_per_10pct_brent")
+        row["war daily: Brent p"] = pick(td, dep, REGIME_LABELS["R3_iran_war"], "p_brent")
+        row["war daily: R2"] = pick(td, dep, REGIME_LABELS["R3_iran_war"], "r2")
+        m = (ri.dependent == dep) & (ri.regime_vs_base == REGIME_LABELS["R3_iran_war"])
+        row["war vs base: p"] = float(ri[m].wald_p.iloc[0])
+        row["level 27 Feb 2026 (bp)"] = lvl.asof(war)
+        row["level 9 Oct 2026 (bp)"] = lvl.asof(pre)
+        row["change during war (bp)"] = lvl.asof(pre) - lvl.asof(war)
+        for lab, ds in [("war onset 2-day (bp)", "2026-03-02"), ("ceasefire 2-day (bp)", "2026-04-08")]:
+            t = lv.index.searchsorted(pd.Timestamp(ds))
+            row[lab] = lvl.iloc[t + 1] - lvl.iloc[t - 1]
+        row["percentile since 2014 (now)"] = float((hist < hist.iloc[-1]).mean())
+        rows.append(row)
+    save("17_curve_slopes", pd.DataFrame(rows))
+    moves = [{"tenor": t.upper(), "yield 27 Feb 2026 (%)": lv[f"bund_{t}"].asof(war),
+              "yield 9 Oct 2026 (%)": lv[f"bund_{t}"].asof(pre),
+              "change (bp)": (lv[f"bund_{t}"].asof(pre) - lv[f"bund_{t}"].asof(war)) * 100}
+             for t in ["2y", "5y", "7y", "10y", "15y", "20y", "30y"]]
+    return save("17b_tenor_moves_war", pd.DataFrame(moves))
+
+
 def main() -> None:
     lv, d, w, m = load()
     steps = [("descriptive", lambda: descriptive(d)), ("unit roots", lambda: unit_roots(lv)),
@@ -741,7 +792,7 @@ def main() -> None:
              ("mediation", lambda: mediation(d, w)), ("VAR", lambda: var_analysis(d, w)),
              ("local projections", lambda: local_projections(lv, d)), ("OOS", lambda: oos_forecast(w)),
              ("HICP", lambda: hicp_passthrough(m)), ("events", lambda: event_study(lv, d)),
-             ("PCA", lambda: curve_pca(d))]
+             ("PCA", lambda: curve_pca(d)), ("curve slopes", lambda: curve_slopes(lv))]
     for name, fn in steps:
         print(f"-> {name}", flush=True)
         fn()
