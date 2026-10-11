@@ -8,8 +8,8 @@ Do European gas prices drive, and predict, moves on the German Bund curve throug
 
 | File | What it is |
 | --- | --- |
-| `output/Gas_Bund_Research_Recap.pdf` | 12-page plain-language recap: the economic story, instruments, data fixes, tests, results, glossary |
-| `output/Gas_Bund_Research_Workbook.xlsx` | Full results (30 sheets). Start with `Executive_Summary` |
+| `output/Gas_Bund_Research_Paper.pdf` | Research paper (LaTeX): mechanism, data, empirical strategy, results, diagnostics, and every OLS regression in full in the appendix |
+| `output/Gas_Bund_Research_Workbook.xlsx` | Full results (32 sheets). Start with `Executive_Summary` |
 | `docs/01_research_foundation.md` | Phase 1 memo: benchmark definitions, data audit, validity of the thesis |
 
 ## Repository layout
@@ -19,7 +19,8 @@ data/raw/       source exports under canonical names (Bundesbank, LSEG, FRED, Eu
 data/clean/     daily / weekly / monthly panels, data dictionary, data quality log
 src/            pipeline code
 output/tables/  one CSV per test family
-output/figures/ charts (PNG)
+output/figures/ charts (PNG; vector PDFs for the paper in output/figures/paper/)
+output/paper/   LaTeX source of the paper
 docs/           research memo
 ```
 
@@ -32,7 +33,7 @@ cd src
 ../.venv/bin/python econometrics.py     # all tests -> output/tables
 ../.venv/bin/python figures.py          # charts -> output/figures
 ../.venv/bin/python build_workbook.py   # results workbook
-../.venv/bin/python build_recap_pdf.py  # recap PDF
+../.venv/bin/python build_paper.py      # LaTeX paper (needs pdflatex)
 ```
 
 ## Data

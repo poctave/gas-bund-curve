@@ -780,6 +780,49 @@ def curve_slopes(lv: pd.DataFrame) -> pd.DataFrame:
     return save("17b_tenor_moves_war", pd.DataFrame(moves))
 
 
+DETAIL_Y = ["d_ils_eur_1y", "d_ils_eur_1y1y", "d_ois_estr_1y1y", "d_ois_estr_2y", "d_bund_2y", "d_bund_5y",
+            "d_bund_10y", "d_bund_30y", "d_slope_2s5s", "d_slope_2s10s", "d_slope_2s30s", "d_slope_5s30s"]
+REG_NAMES = {"const": "Constant", GAS: "TTF (t)", GAS + "_l1": "TTF (t-1)", OIL: "Brent (t)", OIL + "_l1": "Brent (t-1)",
+             FX: "EURUSD (t)", FX + "_l1": "EURUSD (t-1)"}
+
+
+def regression_details(d: pd.DataFrame, w: pd.DataFrame) -> pd.DataFrame:
+    """Full OLS output for the transmission regressions: every coefficient with its Newey-West SE, t, p, and the
+    fit statistics (R2, adjusted R2, HAC-robust F test of all slopes, residual SE, Durbin-Watson, AIC/BIC).
+    Coefficients on TTF and Brent are in bp per 1% move; EURUSD in bp per 1% move."""
+    coefs, fits = [], []
+    samples = [("daily", reg, d if reg == "ALL" else d[d.regime == reg]) for reg in REGIME_ORDER + ["ALL"]]
+    samples += [("weekly", reg, w if reg == "ALL" else w[w.regime == reg]) for reg in ["R1_gas_crisis", "R3_iran_war", "ALL"]]
+    for freq, reg, sub in samples:
+        for y in DETAIL_Y:
+            if sub[y].notna().sum() < (25 if freq == "weekly" else 60):
+                continue
+            if freq == "daily":
+                X = market_X(sub, y)
+            else:
+                sfx = "_lag1d" if is_bbk(y) else ""
+                X = sub[[GAS + sfx, OIL + sfx, FX + sfx]]
+                X.columns = [GAS, OIL, FX]
+            res, data = ols(sub[y], X)
+            lags = nw_lags(len(data))
+            label = REGIME_LABELS.get(reg, "Full sample")
+            for k in res.params.index:
+                coefs.append({"frequency": freq, "regime": label, "dependent": Y_LABELS[y], "regressor": REG_NAMES[k],
+                              "coef": res.params[k], "hac_se": res.bse[k], "t": res.tvalues[k], "p": res.pvalues[k]})
+            k_slopes = len(res.params) - 1
+            ft = res.f_test(np.eye(len(res.params))[1:])
+            g, gse, gp = total_effect(res, GAS)
+            fits.append({"frequency": freq, "regime": label, "dependent": Y_LABELS[y], "n": int(res.nobs),
+                         "sample_start": data.index[0].date(), "sample_end": data.index[-1].date(),
+                         "regressors": k_slopes, "hac_lags": lags, "r2": res.rsquared, "adj_r2": res.rsquared_adj,
+                         "robust_F": float(np.squeeze(ft.fvalue)), "robust_F_p": float(np.squeeze(ft.pvalue)),
+                         "resid_se_bp": float(np.sqrt(res.scale)), "durbin_watson": durbin_watson(res.resid),
+                         "aic": res.aic, "bic": res.bic,
+                         "ttf_total_bp_per_10pct": g * PER10, "ttf_total_se": gse * PER10, "ttf_total_p": gp})
+    save("18_ols_coefficients", pd.DataFrame(coefs))
+    return save("18b_ols_fit", pd.DataFrame(fits))
+
+
 def main() -> None:
     lv, d, w, m = load()
     steps = [("descriptive", lambda: descriptive(d)), ("unit roots", lambda: unit_roots(lv)),
@@ -792,7 +835,8 @@ def main() -> None:
              ("mediation", lambda: mediation(d, w)), ("VAR", lambda: var_analysis(d, w)),
              ("local projections", lambda: local_projections(lv, d)), ("OOS", lambda: oos_forecast(w)),
              ("HICP", lambda: hicp_passthrough(m)), ("events", lambda: event_study(lv, d)),
-             ("PCA", lambda: curve_pca(d)), ("curve slopes", lambda: curve_slopes(lv))]
+             ("PCA", lambda: curve_pca(d)), ("curve slopes", lambda: curve_slopes(lv)),
+             ("OLS details", lambda: regression_details(d, w))]
     for name, fn in steps:
         print(f"-> {name}", flush=True)
         fn()

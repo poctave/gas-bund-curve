@@ -15,3 +15,10 @@ __pycache__/
 # superseded first-pass analysis
 /gas_yield_analysis.py
 /analysis_output/
+
+# LaTeX build files
+output/paper/*.aux
+output/paper/*.log
+output/paper/*.out
+output/paper/*.pdf
+output/paper/figs/

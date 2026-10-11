@@ -202,6 +202,14 @@ def build_results() -> None:
     ws.cell(row=r0 - 1, column=1, value="Bund yield change by tenor, 27 Feb - 9 Oct 2026").font = BOLD
     write_df(ws, tm, r0)
     ws.freeze_panes = ws.cell(row=TABLE_POS["Curve_Slopes"][0] + 1, column=2)
+    result_sheet("OLS_Fit", "18b_ols_fit", "OLS transmission regressions: specification and fit statistics",
+                 ["One row per regression. Daily: dy(t) = a + b g(t) + c o(t) + d e(t) [+ the same at t-1 for Bundesbank series] "
+                  "+ u(t); g, o, e = 100 x log change of TTF, Brent, EURUSD; dy in bp. Weekly: Fri-Fri changes.",
+                  "hac_lags = Newey-West lags floor(4 (T/100)^(2/9)). robust_F = HAC Wald test that all slopes are zero. "
+                  "ttf_total = (b0 + b1) x 100 ln(1.1), bp per +10% TTF."])
+    result_sheet("OLS_Coefficients", "18_ols_coefficients", "OLS transmission regressions: every coefficient",
+                 ["Coefficients in bp per 1% move of the regressor; Newey-West HAC standard errors. Filter by frequency, "
+                  "regime and dependent variable."])
     result_sheet("Rolling_Betas", "08_rolling_betas_120d", "Rolling 120-day TTF sensitivity (bp per +10%)",
                  ["Stepped weekly. 95% band from HAC SEs."])
     event_sheet()

@@ -27,6 +27,23 @@ plt.rcParams.update({
 })
 
 
+PAPER = False  # paper mode: serif type, vector PDF, no headline titles (the LaTeX caption carries the finding)
+
+
+def _title(ax, text: str, panel: bool = False) -> None:
+    if PAPER and not panel:
+        return
+    ax.set_title(text)
+
+
+def _save(fig, name: str) -> None:
+    if PAPER:
+        fig.savefig(FIGURES / "paper" / f"{name}.pdf", bbox_inches="tight")
+    else:
+        fig.savefig(FIGURES / f"{name}.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def _war_marker(ax, label: bool = False):
     ax.axvline(WAR, color=MUTED, lw=0.8)
     if label:
@@ -39,7 +56,7 @@ def fig_timeline(lv: pd.DataFrame) -> None:
     fig, axes = plt.subplots(3, 1, figsize=(9, 7.2), sharex=True, gridspec_kw={"hspace": 0.32})
     ax = axes[0]
     ax.plot(x.index, x.gas_ttf_m1_eurmwh, color=S1)
-    ax.set_title("TTF front-month gas, EUR/MWh")
+    _title(ax, "TTF front-month gas, EUR/MWh", panel=True)
     _war_marker(ax, label=True)
     for d, t in [("2026-04-08", "Ceasefire"), ("2026-06-11", "ECB hike"), ("2026-09-10", "ECB hike")]:
         ax.axvline(pd.Timestamp(d), color=GRID, lw=0.8)
@@ -48,20 +65,19 @@ def fig_timeline(lv: pd.DataFrame) -> None:
     ax = axes[1]
     ax.plot(x.index, x.ils_eur_1y1y, color=S1, label="Inflation swap 1y1y")
     ax.plot(x.index, x.ois_estr_1y1y, color=S2, label="€STR OIS 1y1y (expected policy rate)")
-    ax.set_title("Inflation expectations vs expected ECB rate, %")
+    _title(ax, "Inflation expectations vs expected ECB rate, %", panel=True)
     ax.legend(loc="upper left")
     _war_marker(ax)
     ax = axes[2]
     ax.plot(x.index, x.bund_2y, color=S1, label="Bund 2Y")
     ax.plot(x.index, x.bund_30y, color=S2, label="Bund 30Y")
-    ax.set_title("German yields, % (front end rises more = bear flattening)")
+    _title(ax, "German yields, % (front end rises more = bear flattening)", panel=True)
     ax.legend(loc="upper left")
     _war_marker(ax)
     for a in axes:
         for side in ("bottom",):
             a.spines[side].set_color(AXIS)
-    fig.savefig(FIGURES / "f1_war_timeline.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f1_war_timeline")
 
 
 def fig_regime_betas() -> None:
@@ -84,12 +100,11 @@ def fig_regime_betas() -> None:
     ax.axhline(0, color=AXIS, lw=0.8)
     ax.set_xticks(xs, deps, color=INK2)
     ax.set_ylabel("bp per +10% TTF (same + previous day)")
-    ax.set_title("Gas sensitivity by regime: only in the Iran war does gas lift the front end and flatten the curve")
+    _title(ax, "Gas sensitivity by regime: only in the Iran war does gas lift the front end and flatten the curve")
     ax.legend(ncol=4, loc="upper left", bbox_to_anchor=(0, -0.1))
     ax.annotate("* p < 0.05 (Newey-West HAC)", (1, -0.2), xycoords="axes fraction", ha="right", va="top",
                 color=MUTED, fontsize=7.5)
-    fig.savefig(FIGURES / "f2_regime_betas.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f2_regime_betas")
 
 
 def fig_rolling() -> None:
@@ -102,11 +117,10 @@ def fig_rolling() -> None:
         ax.axhline(0, color=AXIS, lw=0.8)
         ax.axvspan(pd.Timestamp("2021-07-01"), pd.Timestamp("2022-12-31"), color=GRID, alpha=0.5, lw=0)
         _war_marker(ax)
-        ax.set_title(f"{title}: rolling 120-day TTF sensitivity, bp per +10% (95% band)")
+        _title(ax, f"{title}: rolling 120-day TTF sensitivity, bp per +10% (95% band)", panel=True)
     axes[0].annotate("2021-22 gas crisis", (pd.Timestamp("2021-08-01"), 1), xycoords=("data", "axes fraction"),
                      xytext=(0, -10), textcoords="offset points", color=MUTED, fontsize=7.5)
-    fig.savefig(FIGURES / "f3_rolling_beta.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f3_rolling_beta")
 
 
 def fig_local_projection() -> None:
@@ -118,11 +132,10 @@ def fig_local_projection() -> None:
             ax.fill_between(x.horizon_days, x.cum_lo95_bp10, x.cum_hi95_bp10, color=c, alpha=0.10, lw=0)
             ax.plot(x.horizon_days, x.cum_bp_per_10pct, color=c, label=sample, marker="o", ms=3)
         ax.axhline(0, color=AXIS, lw=0.8)
-        ax.set_title(f"{dep}: cumulative response to +10% TTF, bp")
+        _title(ax, f"{dep}: cumulative response to +10% TTF, bp", panel=True)
         ax.set_xlabel("business days after the gas move")
     axes[0].legend(loc="upper right")
-    fig.savefig(FIGURES / "f4_local_projections.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f4_local_projections")
 
 
 def fig_hicp_lags() -> None:
@@ -137,10 +150,9 @@ def fig_hicp_lags() -> None:
                     xytext=(0, 7), textcoords="offset points", ha="center", color=INK2, fontsize=8)
     ax.set_xlabel("months between the energy price change and the inflation print")
     ax.set_ylabel("pp of HICP y/y per +10%")
-    ax.set_title("Oil hits inflation immediately; gas arrives 6-12 months later")
+    _title(ax, "Oil hits inflation immediately; gas arrives 6-12 months later")
     ax.legend(loc="upper center")
-    fig.savefig(FIGURES / "f5_hicp_lag_scan.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f5_hicp_lag_scan")
 
 
 def fig_flatteners() -> None:
@@ -159,12 +171,11 @@ def fig_flatteners() -> None:
     ax.axhline(0, color=AXIS, lw=0.8)
     ax.set_xticks(xs, c.slope, color=INK2)
     ax.set_ylabel("slope change, bp per +10% TTF")
-    ax.set_title("Iran war: every gas-driven flattener points the same way; 2s30s is the largest and most robust")
+    _title(ax, "Iran war: every gas-driven flattener points the same way; 2s30s is the largest and most robust")
     ax.legend(loc="lower left", ncol=2)
     ax.annotate("* p < 0.05 (Newey-West HAC)", (1, -0.13), xycoords="axes fraction", ha="right", va="top",
                 color=MUTED, fontsize=7.5)
-    fig.savefig(FIGURES / "f6_flatteners.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f6_flatteners")
 
 
 def fig_tenor_moves() -> None:
@@ -174,10 +185,19 @@ def fig_tenor_moves() -> None:
     for x, v in zip(t.tenor, t["change (bp)"]):
         ax.annotate(f"+{v:.0f}", (x, v), xytext=(0, 3), textcoords="offset points", ha="center", color=INK2, fontsize=8.5)
     ax.set_ylabel("yield change, bp")
-    ax.set_title("Bund yields 27 Feb to 9 Oct 2026: each tenor rose less than the one before it (bear flattening)")
+    _title(ax, "Bund yields 27 Feb to 9 Oct 2026: each tenor rose less than the one before it (bear flattening)")
     ax.tick_params(axis="x", colors=INK2)
-    fig.savefig(FIGURES / "f7_tenor_moves_war.png", dpi=160, bbox_inches="tight")
-    plt.close(fig)
+    _save(fig, "f7_tenor_moves_war")
+
+
+def paper_mode() -> None:
+    global PAPER
+    PAPER = True
+    (FIGURES / "paper").mkdir(exist_ok=True)
+    plt.rcParams.update({"font.family": "serif", "font.serif": ["STIXGeneral", "DejaVu Serif"],
+                         "mathtext.fontset": "stix", "font.size": 9.5, "axes.facecolor": "white",
+                         "figure.facecolor": "white", "axes.titleweight": "normal", "axes.titlesize": 9.5,
+                         "pdf.fonttype": 42})
 
 
 def main() -> None:
@@ -193,4 +213,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    main()
+    paper_mode()
     main()
